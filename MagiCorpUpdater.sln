@@ -6,9 +6,6 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MagiCorpUpdater", "MagiCorpUpdater\MagiCorpUpdater.csproj", "{F673A038-A768-47C8-83CB-14E9B3EDFD6C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{A2A23A06-9973-4280-9923-043DA48D1C61}"
-	ProjectSection(SolutionItems) = preProject
-		Debug.cs = Debug.cs
-	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

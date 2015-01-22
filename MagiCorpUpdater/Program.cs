@@ -188,6 +188,8 @@ namespace MagiCorpUpdater
                         foreach (Process proc in Process.GetProcessesByName(ProgramName))
                         {
                             proc.Kill();
+                            Debug.ConOut("Waiting for program to close...");
+                            Thread.Sleep(2000);
                         }
                     }
                     catch (Exception e)
@@ -213,12 +215,42 @@ namespace MagiCorpUpdater
                 Debug.ConOut("No leftovers found.");
             }
 
-            Debug.ConOut("Waiting for program to close...");
-            Thread.Sleep(2000);
+
 
             //EXTRACT TIME!
             Debug.ConOut("Extracting package: " + PackageName);
             ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + "/tmp");
+
+            //Backup time...
+            BackupExistingProgram();
+
+            //aaand time to update
+            CopyToLive();
+        }
+
+        static void BackupExistingProgram()
+        {
+            string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
+
+            try
+            {
+                foreach (string filename in files)
+                {
+                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\"+ filename;
+                    Debug.ConOut(filename, false, true);
+                    File.Move(filename, MoveMeHere);
+                //    File.Copy(filename, Directory.GetCurrentDirectory() + "/bak/" + filename);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.ConOut(e.Message, true);
+            }
+        }
+
+        static void CopyToLive()
+        {
+            Debug.ConOut("C2L not implemented yet", false, true);
         }
 
     }
