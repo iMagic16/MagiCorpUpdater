@@ -144,12 +144,20 @@ namespace MagiCorpUpdater
                     try
                     {
                         UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".zip", "update.zip");
+                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".md5", "update.md5");
+
                     }
                     catch (Exception e)
                     {
                         Debug.ConOut(e.Message, true);
                         // throw;
                     }
+
+
+                    //Compare the MD5 of downloaded with checksum from the server
+                    MD5Check("update.md5");
+
+
 
                     //CALL EXTR
                     ExtractPackage("update.zip", ProgramName);
@@ -215,7 +223,6 @@ namespace MagiCorpUpdater
             }
 
 
-
             //EXTRACT TIME!
             Debug.ConOut("Extracting package: " + PackageName);
             ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + "/tmp");
@@ -227,18 +234,35 @@ namespace MagiCorpUpdater
             CopyToLive();
         }
 
+
         static void BackupExistingProgram()
         {
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
-
+            //https://msdn.microsoft.com/en-us/library/system.io.path.getfilename(v=vs.110).aspx
             try
             {
                 foreach (string filename in files)
                 {
-                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\" + filename;
+                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\";
+                    //raw filename
                     Debug.ConOut(filename, false, true);
-                    File.Move(filename, MoveMeHere);
-                    //    File.Copy(filename, Directory.GetCurrentDirectory() + "/bak/" + filename);
+                    //amended filename
+                    string AmendedFilename = Path.GetFileName(filename);
+                    Debug.ConOut(AmendedFilename, false, true);
+                    //Move to here
+                    Debug.ConOut(MoveMeHere, false, true);
+
+                    //check if file is legit
+                    if (AmendedFilename.EndsWith(@"\"))
+                    {
+                        //no legit files found
+                        Debug.ConOut("No files found to backup");
+                    }
+                    else
+                    {
+                        //actually move the file
+                        File.Move(AmendedFilename, MoveMeHere);
+                    }
                 }
             }
             catch (Exception e)
@@ -250,6 +274,11 @@ namespace MagiCorpUpdater
         static void CopyToLive()
         {
             Debug.ConOut("C2L not implemented yet", false, true);
+        }
+
+        static void MD5Check(string md5, string FileToCheck)
+        {
+            Debug.ConOut("MD5 check not implemented yet", false, true);
         }
 
     }
