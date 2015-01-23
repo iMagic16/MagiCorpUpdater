@@ -8,6 +8,7 @@ using System.IO;
 using System.IO.Compression;
 using System.Diagnostics;
 using System.Threading;
+using System.Security.Cryptography;
 
 //                  TO DO
 // MD5 check / file downloaded integrity check
