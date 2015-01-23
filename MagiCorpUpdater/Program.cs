@@ -9,16 +9,12 @@ using System.IO.Compression;
 using System.Diagnostics;
 using System.Threading;
 
-//
 //                  TO DO
 // MD5 check / file downloaded integrity check
 // Check if the program is running before unzip, ask to close or force kill [DONE]
 //Copy out of tmp dir into working dir
 //backup old ver
 //
-//
-
-
 
 namespace MagiCorpUpdater
 {
@@ -33,7 +29,7 @@ namespace MagiCorpUpdater
             //Argument Checker
             if (args == null)
             {
-                Debug.ConOut("No Arguments"); // Check for null array
+                Debug.ConOut("No Arguments taken"); // no args? gg
             }
             else
             {
@@ -44,23 +40,25 @@ namespace MagiCorpUpdater
                     string argument = args[i];
                     Debug.ConOut("Argument " + i + " is [" + argument + "]");
 
+                    //-p: (program name) via switch
                     if (argument.Contains("-p:"))
                     {
                         Debug.ConOut("Argument found for Program Name: " + argument);
-                        ProgName = argument.Trim(new char[] { '-', 'p', ':' });
-                        Debug.ConOut("P: " + ProgName);
+                        ProgName = argument.Trim(new char[] { '-', 'p', ':' });//cut the -p: from the switch
+                        Debug.ConOut("P: " + ProgName, false, true); //output trimmed switch input to console
                     }
+                    //-v: (program veresion) via switch
                     if (argument.Contains("-v:"))
                     {
                         Debug.ConOut("Argument found for Program Version: " + argument);
-                        ProgVer = argument.Trim(new char[] { '-', 'v', ':' });
-                        Debug.ConOut("V: " + ProgVer);
+                        ProgVer = argument.Trim(new char[] { '-', 'v', ':' }); //cut the -v: from the switch
+                        Debug.ConOut("V: " + ProgVer, false, true); //output trimmed switch input to console
                     }
 
                 }
             }
 
-            Debug.ConOut("DEBUG MODE");
+            Debug.ConOut("PROGRAM START_");
 
 
             //Checking if we have had args set our names and versions
@@ -236,10 +234,10 @@ namespace MagiCorpUpdater
             {
                 foreach (string filename in files)
                 {
-                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\"+ filename;
+                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\" + filename;
                     Debug.ConOut(filename, false, true);
                     File.Move(filename, MoveMeHere);
-                //    File.Copy(filename, Directory.GetCurrentDirectory() + "/bak/" + filename);
+                    //    File.Copy(filename, Directory.GetCurrentDirectory() + "/bak/" + filename);
                 }
             }
             catch (Exception e)
