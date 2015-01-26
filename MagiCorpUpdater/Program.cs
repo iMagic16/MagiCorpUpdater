@@ -21,9 +21,11 @@ namespace MagiCorpUpdater
 {
     class Program
     {
+        public static string sha256generated = "";
+        public static bool fileIntegrity;
+
         static void Main(string[] args)
         {
-
             string ProgName = "";
             string ProgVer = "";
 
@@ -61,9 +63,7 @@ namespace MagiCorpUpdater
 
             Debug.ConOut("PROGRAM START_");
 
-
             //Checking if we have had args set our names and versions
-
             if (ProgName.Length > 1)
             {
                 //Do nothing
@@ -92,15 +92,13 @@ namespace MagiCorpUpdater
                     Debug.ConOut("Version?");
                     ProgVer = Console.ReadLine();
                 }
-
             }
-
 
             //Call subroutine to check for updates
             CheckForUpdates(ProgName, ProgVer);
 
             Debug.ConOut("DONE");
-            Console.ReadLine();
+            Console.ReadKey();
         }
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
@@ -119,11 +117,9 @@ namespace MagiCorpUpdater
             {
                 NewVersion = UpdateClient.DownloadString(UpdateURL + FileToCheck);
             }
-
             catch (Exception e)
             {
                 Debug.ConOut(e.Message, true);
-                //throw;
             }
 
             //Compare
@@ -132,7 +128,6 @@ namespace MagiCorpUpdater
             {
                 double intNewVersion = Convert.ToDouble(NewVersion);
                 double intCurrentVersion = Convert.ToDouble(CurrentVersion);
-
 
                 Debug.ConOut(NewVersion + ">" + CurrentVersion);
 
@@ -144,7 +139,7 @@ namespace MagiCorpUpdater
                     try
                     {
                         UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".zip", "update.zip");
-                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".md5", "update.md5");
+                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".sha256", "update.sha256");
 
                     }
                     catch (Exception e)
@@ -153,16 +148,13 @@ namespace MagiCorpUpdater
                         // throw;
                     }
 
-
                     //Compare the MD5 of downloaded with checksum from the server
-                    MD5Check("update.md5");
-
-
+                    Debug.ConOut("Call sha256 check");
+                    SHA256Check("update.sha256", "update.zip");
 
                     //CALL EXTR
+                    Debug.ConOut("Call file extraction");
                     ExtractPackage("update.zip", ProgramName);
-                    //ProgramName
-
                 }
                 else
                 {
@@ -173,10 +165,9 @@ namespace MagiCorpUpdater
             {
                 Debug.ConOut(e.Message, true);
             }
-
-
         }
 
+        //extract zip into tmp
         static void ExtractPackage(string PackageName, string ProgramName)
         {
 
@@ -214,7 +205,7 @@ namespace MagiCorpUpdater
             Debug.ConOut("Clearing old data...");
             if (Directory.Exists("tmp"))
             {
-                Debug.ConOut("tmp dir found, deleting");
+                Debug.ConOut("tmp dir found, deleting", true);
                 Directory.Delete("tmp", true);
             }
             else
@@ -222,10 +213,9 @@ namespace MagiCorpUpdater
                 Debug.ConOut("No leftovers found.");
             }
 
-
             //EXTRACT TIME!
             Debug.ConOut("Extracting package: " + PackageName);
-            ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + "/tmp");
+            ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + "\\tmp");
 
             //Backup time...
             BackupExistingProgram();
@@ -234,7 +224,7 @@ namespace MagiCorpUpdater
             CopyToLive();
         }
 
-
+        //backup existing live program
         static void BackupExistingProgram()
         {
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
@@ -243,25 +233,25 @@ namespace MagiCorpUpdater
             {
                 foreach (string filename in files)
                 {
-                    string MoveMeHere = Directory.GetCurrentDirectory() + "\\bak\\";
+                    string MoveMeHere = Directory.GetCurrentDirectory() + @"\bak\";
                     //raw filename
-                    Debug.ConOut(filename, false, true);
+                    Debug.ConOut("RAW:" + filename, false, true);
+
                     //amended filename
                     string AmendedFilename = Path.GetFileName(filename);
-                    Debug.ConOut(AmendedFilename, false, true);
-                    //Move to here
-                    Debug.ConOut(MoveMeHere, false, true);
+                    Debug.ConOut("AMENDED: " + AmendedFilename, false, true);
 
                     //check if file is legit
-                    if (AmendedFilename.EndsWith(@"\"))
+                    if (AmendedFilename.EndsWith(@"\\"))
                     {
                         //no legit files found
-                        Debug.ConOut("No files found to backup");
+                        Debug.ConOut("No files found to backup", false, true);
                     }
                     else
                     {
+                        Debug.ConOut("File found, moving", false, true);
                         //actually move the file
-                        File.Move(AmendedFilename, MoveMeHere);
+                        File.Move(filename, Path.Combine(MoveMeHere + AmendedFilename));
                     }
                 }
             }
@@ -271,14 +261,72 @@ namespace MagiCorpUpdater
             }
         }
 
+        //copy the files from tmp to "live" system
         static void CopyToLive()
         {
             Debug.ConOut("C2L not implemented yet", false, true);
+            Thread.Sleep(2000);
         }
 
-        static void MD5Check(string md5, string FileToCheck)
+        //check file integrity
+        static void SHA256Check(string sha256, string FileToCheck)
         {
-            Debug.ConOut("MD5 check not implemented yet", false, true);
+            Debug.ConOut("SHA256 check is heavily WIP", false, true);
+
+            Debug.ConOut("Opening file to generate sha256...");
+            FileStream fs = File.Open(FileToCheck, FileMode.Open, FileAccess.Read, FileShare.None);
+
+            Debug.ConOut("Create sha256 instance");
+            SHA256 sha256r = SHA256Managed.Create();
+
+            Debug.ConOut("Create hash from file...");
+            byte[] hashvalue = sha256r.ComputeHash(fs);
+
+            Debug.ConOut("Closing file");
+            fs.Close();
+
+            Debug.ConOut("Convert byte array into a string");
+            PrintByteArray(hashvalue);
+
+            Debug.ConOut("Read sha256 from the server");
+            string sha256fromweb = File.ReadAllText(sha256);
+
+            Debug.ConOut("Write generated sha256 to a file");
+            File.WriteAllText("update_generated.sha256", sha256generated);
+
+            Debug.ConOut("Comparing " + sha256generated + " to " + sha256fromweb);
+            if (sha256generated == sha256fromweb)
+            {
+                Debug.ConOut("File integrity: OK");
+                fileIntegrity = true;
+            }
+            else
+            {
+                Debug.ConOut("File integrity: BAD");
+                fileIntegrity = false;
+            }
+
+        }
+
+        // Print the byte array in a readable format. 
+        public static string PrintByteArray(byte[] array)
+        {
+            int i;
+            for (i = 0; i < array.Length; i++)
+            {
+                //Console.Write(String.Format("{0:X2}", array[i]));
+                sha256generated += String.Format("{0:X2}", array[i]);
+                Debug.ConOut(sha256generated, false, true);
+                if ((i % 4) == 3)
+                {
+                    Debug.ConOut(" ", false, true);
+                    sha256generated += " ";
+                }
+            }
+            Console.WriteLine();
+            sha256generated = sha256generated.ToLower();
+            sha256generated = sha256generated.Replace(" ", "");
+            return sha256generated;
         }
 
     }

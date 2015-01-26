@@ -16,7 +16,7 @@ public class Debug
         else if (SPC)
         {
             Console.ForegroundColor = ConsoleColor.Cyan;
-            Console.WriteLine(Msg);
+            Console.WriteLine("{0}:{1}.{2}|{3}: SPECIAL: " + Msg, DateTime.Now.Hour, DateTime.Now.Minute, DateTime.Now.Second, DateTime.Now.Millisecond);
         }
         else
         {
