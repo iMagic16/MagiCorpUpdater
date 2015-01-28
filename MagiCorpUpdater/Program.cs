@@ -98,12 +98,14 @@ namespace MagiCorpUpdater
             CheckForUpdates(ProgName, ProgVer);
 
             Debug.ConOut("DONE");
+            Debug.ConOut("Launching...");
+            Process.Start(ProgName + ".exe");
             Console.ReadKey();
         }
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
         {
-            string UpdateURL = "http://magicorp.comuv.com/updater/" + ProgramName + "/";
+            string UpdateURL = "http://magicorp.comuv.com/Updater/" + ProgramName + "/";
             string FileToCheck = "version.mup";
             string NewVersion = "null";
             //create new net web interf
@@ -128,7 +130,7 @@ namespace MagiCorpUpdater
             {
                 double intNewVersion = Convert.ToDouble(NewVersion);
                 double intCurrentVersion = Convert.ToDouble(CurrentVersion);
-
+                bool DownloadedOK = false;
                 Debug.ConOut(NewVersion + ">" + CurrentVersion);
 
                 if (intNewVersion > intCurrentVersion)
@@ -140,7 +142,7 @@ namespace MagiCorpUpdater
                     {
                         UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".zip", "update.zip");
                         UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".sha256", "update.sha256");
-
+                        DownloadedOK = true;
                     }
                     catch (Exception e)
                     {
@@ -148,13 +150,26 @@ namespace MagiCorpUpdater
                         // throw;
                     }
 
-                    //Compare the MD5 of downloaded with checksum from the server
-                    Debug.ConOut("Call sha256 check");
-                    SHA256Check("update.sha256", "update.zip");
-
-                    //CALL EXTR
-                    Debug.ConOut("Call file extraction");
-                    ExtractPackage("update.zip", ProgramName);
+                    if (DownloadedOK == true)
+                    {
+                        //Compare the MD5 of downloaded with checksum from the server only if it downloaded fine.
+                        Debug.ConOut("File downloaded OK, Calling sha256 check");
+                        SHA256Check("update.sha256", "update.zip");
+                    }
+                    else
+                    {
+                        Debug.ConOut("DOWNLOAD FAILED!", true);
+                    }
+                    //CALL EXTR only if sha passed.
+                    if (fileIntegrity == true)
+                    {
+                        Debug.ConOut("SHA256 check passed, Calling zip file extraction");
+                        ExtractPackage("update.zip", ProgramName);
+                    }
+                    else
+                    {
+                        Debug.ConOut("DOWNLOADED FILE DOES NOT MATCH CHECKSUMS", true);
+                    }
                 }
                 else
                 {
@@ -215,7 +230,7 @@ namespace MagiCorpUpdater
 
             //EXTRACT TIME!
             Debug.ConOut("Extracting package: " + PackageName);
-            ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + "\\tmp");
+            ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + @"\tmp");
 
             //Backup time...
             BackupExistingProgram();
@@ -227,12 +242,31 @@ namespace MagiCorpUpdater
         //backup existing live program
         static void BackupExistingProgram()
         {
+            string fileName = "";
+
+            //string sourcePath = Directory.GetCurrentDirectory();
+
+            string targetPath = Directory.GetCurrentDirectory() + @"\Backup";
+
+            //Use Path class to manipulate file and directory paths.
+            //string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+
+            string destFile = System.IO.Path.Combine(targetPath, fileName);
+
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
+
             //https://msdn.microsoft.com/en-us/library/system.io.path.getfilename(v=vs.110).aspx
+
             try
             {
-                foreach (string filename in files)
+                foreach (string s in files)
                 {
+                    fileName = Path.GetFileName(s);
+                    destFile = Path.Combine(targetPath, fileName);
+                    System.IO.File.Move(s, destFile);
+                    Debug.ConOut("Moved " + s + " from " + Directory.GetCurrentDirectory() + " to " + targetPath);
+                    #region Old Copying Code
+                    /*
                     string MoveMeHere = Directory.GetCurrentDirectory() + @"\bak\";
                     //raw filename
                     Debug.ConOut("RAW:" + filename, false, true);
@@ -253,6 +287,9 @@ namespace MagiCorpUpdater
                         //actually move the file
                         File.Move(filename, Path.Combine(MoveMeHere + AmendedFilename));
                     }
+                     */
+
+                    #endregion
                 }
             }
             catch (Exception e)
@@ -264,14 +301,44 @@ namespace MagiCorpUpdater
         //copy the files from tmp to "live" system
         static void CopyToLive()
         {
-            Debug.ConOut("C2L not implemented yet", false, true);
+            Debug.ConOut("Copy2Live is heavily WIP", false, true);
             Thread.Sleep(2000);
+
+            string fileName = "";
+
+            string sourcePath = Directory.GetCurrentDirectory() + @"\tmp";
+            string targetPath = Directory.GetCurrentDirectory();
+
+            //Use Path class to manipulate file and directory paths.
+            //string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
+
+            string destFile = System.IO.Path.Combine(targetPath, fileName);
+
+            string[] files = Directory.GetFiles(sourcePath);
+
+            //https://msdn.microsoft.com/en-us/library/system.io.path.getfilename(v=vs.110).aspx
+
+            try
+            {
+                foreach (string s in files)
+                {
+                    fileName = Path.GetFileName(s);
+                    destFile = Path.Combine(targetPath, fileName);
+                    System.IO.File.Move(s, destFile);
+                    Debug.ConOut("Moved " + s + " from " + Directory.GetCurrentDirectory() + " to " + targetPath);
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.ConOut(e.Message, true);
+            }
+
         }
 
         //check file integrity
         static void SHA256Check(string sha256, string FileToCheck)
         {
-            Debug.ConOut("SHA256 check is heavily WIP", false, true);
+            Debug.ConOut("SHA256 check in progress...", false, true);
 
             Debug.ConOut("Opening file to generate sha256...");
             FileStream fs = File.Open(FileToCheck, FileMode.Open, FileAccess.Read, FileShare.None);
