@@ -11,10 +11,10 @@ using System.Threading;
 using System.Security.Cryptography;
 
 //                  TO DO
-// MD5 check / file downloaded integrity check
+// MD5 check / file downloaded integrity check [DONE]
 // Check if the program is running before unzip, ask to close or force kill [DONE]
-//Copy out of tmp dir into working dir
-//backup old ver
+//Copy out of tmp dir into working dir [DONE]
+//backup old ver [DONE]
 //
 
 namespace MagiCorpUpdater
@@ -242,6 +242,7 @@ namespace MagiCorpUpdater
         //backup existing live program
         static void BackupExistingProgram()
         {
+            Debug.ConOut("Backing up existing program...", false, true);
             string fileName = "";
 
             //string sourcePath = Directory.GetCurrentDirectory();
@@ -256,46 +257,32 @@ namespace MagiCorpUpdater
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
 
             //https://msdn.microsoft.com/en-us/library/system.io.path.getfilename(v=vs.110).aspx
-
             try
             {
+                if (Directory.Exists("Backup"))
+                {
+                    Debug.ConOut("Backup dir already exists, continuing...");
+                }
+                else
+                {
+                    Debug.ConOut("Backup dir not found, creating...");
+                    Directory.CreateDirectory("Backup");
+                }
+
                 foreach (string s in files)
                 {
                     fileName = Path.GetFileName(s);
                     destFile = Path.Combine(targetPath, fileName);
-                    System.IO.File.Move(s, destFile);
-                    Debug.ConOut("Moved " + s + " from " + Directory.GetCurrentDirectory() + " to " + targetPath);
-                    #region Old Copying Code
-                    /*
-                    string MoveMeHere = Directory.GetCurrentDirectory() + @"\bak\";
-                    //raw filename
-                    Debug.ConOut("RAW:" + filename, false, true);
-
-                    //amended filename
-                    string AmendedFilename = Path.GetFileName(filename);
-                    Debug.ConOut("AMENDED: " + AmendedFilename, false, true);
-
-                    //check if file is legit
-                    if (AmendedFilename.EndsWith(@"\\"))
-                    {
-                        //no legit files found
-                        Debug.ConOut("No files found to backup", false, true);
-                    }
-                    else
-                    {
-                        Debug.ConOut("File found, moving", false, true);
-                        //actually move the file
-                        File.Move(filename, Path.Combine(MoveMeHere + AmendedFilename));
-                    }
-                     */
-
-                    #endregion
+                    System.IO.File.Copy(s, destFile, true);
+                    Debug.ConOut("B: Moved " + s + " to " + targetPath, false, false, true);
                 }
             }
             catch (Exception e)
             {
                 Debug.ConOut(e.Message, true);
+                throw;
             }
+
         }
 
         //copy the files from tmp to "live" system
@@ -324,8 +311,8 @@ namespace MagiCorpUpdater
                 {
                     fileName = Path.GetFileName(s);
                     destFile = Path.Combine(targetPath, fileName);
-                    System.IO.File.Move(s, destFile);
-                    Debug.ConOut("Moved " + s + " from " + Directory.GetCurrentDirectory() + " to " + targetPath);
+                    System.IO.File.Copy(s, destFile, true);
+                    Debug.ConOut("C2L: Moved " + s + " to " + targetPath, false, false, true);
                 }
             }
             catch (Exception e)
@@ -364,12 +351,12 @@ namespace MagiCorpUpdater
             Debug.ConOut("Comparing " + sha256generated + " to " + sha256fromweb);
             if (sha256generated == sha256fromweb)
             {
-                Debug.ConOut("File integrity: OK");
+                Debug.ConOut("File integrity: OK", false, false, true);
                 fileIntegrity = true;
             }
             else
             {
-                Debug.ConOut("File integrity: BAD");
+                Debug.ConOut("File integrity: BAD", true);
                 fileIntegrity = false;
             }
 
@@ -383,10 +370,10 @@ namespace MagiCorpUpdater
             {
                 //Console.Write(String.Format("{0:X2}", array[i]));
                 sha256generated += String.Format("{0:X2}", array[i]);
-                Debug.ConOut(sha256generated, false, true);
+                Debug.ConOut(sha256generated, false, false, true);
                 if ((i % 4) == 3)
                 {
-                    Debug.ConOut(" ", false, true);
+                    Debug.ConOut(" ", false, false, true);
                     sha256generated += " ";
                 }
             }
