@@ -13,17 +13,11 @@ The application should do the rest
 
 To add this to your program you need to do a few things.
 
-First: create a version.mup file holding the number of the latest version of 
+First: create a version.mup file holding the number of the latest version of your program (we'll compare this to your running version)
 
-your program (we'll compare this to your running version)
+Second: Place a zip file with the same name as version. ex: version 1136 of a program's zip would be 1136.zip 
 
-Second: Place a zip file with the same name as version. ex: version 1136 of a 
-
-program's zip would be 1136.zip 
-
-Third: Generate a sha256 checksum of the zip and place it inside a 
-
-<version>.sha256 file
+Third: Generate a sha256 checksum of the zip and place it inside a <version>.sha256 file
 
 Finally: Place all of these inside your ://WebServer/Updater/ProgramName/
 
