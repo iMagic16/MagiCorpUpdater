@@ -1,6 +1,5 @@
 # MagiCorp Updater
-#Program Name: MagiCorp Updater
-#Made By:JamesW/MagiCorp
+Made By:JamesW/MagiCorp
 
 #What this program does: 
 This program handles updating in a modular way
