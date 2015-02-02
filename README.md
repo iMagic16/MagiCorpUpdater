@@ -46,11 +46,14 @@ Python Example: subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -
 
 #Known bugs and fixes
 ERROR: Input string was not in a correct format.
+
 FIXES: Your URL may have a trailing slash in the -s:
+
 FIXES: The web server is responding in an unusual way
 
 
 ERROR: 
+
 FIXES:
 
 #Contact: 
