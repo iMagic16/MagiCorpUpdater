@@ -15,15 +15,17 @@ using System.Security.Cryptography;
 // Check if the program is running before unzip, ask to close or force kill [DONE]
 //Copy out of tmp dir into working dir [DONE]
 //backup old ver [DONE]
+//add server to sw
 //
 
 namespace MagiCorpUpdater
 {
     class Program
     {
-        public static string sha256generated = "";
+        public static string sha256generated = "", serverURL;
         public static bool fileIntegrity;
-
+        public static bool UrlFromSw = false;
+        
         static void Main(string[] args)
         {
             string ProgName = "";
@@ -56,6 +58,14 @@ namespace MagiCorpUpdater
                         Debug.ConOut("Argument found for Program Version: " + argument);
                         ProgVer = argument.Trim(new char[] { '-', 'v', ':' }); //cut the -v: from the switch
                         Debug.ConOut("V: " + ProgVer, false, true); //output trimmed switch input to console
+                    }
+                    //-s: (server url) via switch
+                    if (argument.Contains("-s:"))
+                    {
+                        Debug.ConOut("Argument found for Server: " + argument);
+                        serverURL = argument.Trim(new char[] { '-', 's', ':' }); //cut the -s: from the switch
+                        Debug.ConOut("S: " + serverURL, false, true); //output trimmed switch input to console
+                        UrlFromSw = true;
                     }
 
                 }
@@ -105,7 +115,17 @@ namespace MagiCorpUpdater
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
         {
-            string UpdateURL = "http://magicorp.comuv.com/Updater/" + ProgramName + "/";
+            string UpdateURL;
+
+            if (UrlFromSw == true)
+            {
+                UpdateURL = serverURL + @"/" + ProgramName + @"/";
+            }
+            else
+            {
+                UpdateURL = "http://magicorp.comuv.com/Updater/" + ProgramName + @"/";
+            }
+
             string FileToCheck = "version.mup";
             string NewVersion = "null";
             //create new net web interf
