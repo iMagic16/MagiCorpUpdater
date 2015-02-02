@@ -3,7 +3,9 @@ Made By:JamesW/MagiCorp
 
 #What this program does: 
 This program handles updating in a modular way
+
 You specify the web server holding the updates, versions and checksums
+
 The application should do the rest
 
 
@@ -29,22 +31,23 @@ Finally: Place all of these inside your ://WebServer/Updater/ProgramName/
 #To execute this from your program: 
 
 Add a process.start for MagiCorpUpdater.exe
-In this start, add the switches based on your programs details
--p: [Name of the program you're updating] (this must match the case and spacing 
 
-as the web server)
+In this start, add the switches based on your programs details
+
+-p: [Name of the program you're updating] (this must match the case and spacing as the web server)
+
 -v: [Version of the program you're updating]
+
 -s: [Web server holding data]
 
-Example: Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -
 
-s:http://magicorp.comuv.com/Updater");
+Example: Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
+
 
 Note! You don't have to use C# to use this program!
 
-Python Example: subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 
 
--s:http://magicorp.comuv.com/Updater")
+Python Example: subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
 
 
 #Known bugs and fixes
@@ -52,11 +55,14 @@ ERROR: Input string was not in a correct format.
 FIXES: Your URL may have a trailing slash in the -s:
 FIXES: The web server is responding in an unusual way
 
+
 ERROR: 
 FIXES:
 
 #Contact: 
 Gmail
 jameswalsh5684@gmail.com
+
+
 Steam
 the_magical_one
