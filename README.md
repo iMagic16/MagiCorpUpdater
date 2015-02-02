@@ -1,17 +1,14 @@
-# MagiCorpUpdater
-MagiCorp Update Manager
+# MagiCorp Updater
+#Program Name: MagiCorp Updater
+#Made By:JamesW/MagiCorp
 
-
-Program Name: MagiCorp Updater
-Made By:JamesW/MagiCorp
-
-What this program does: 
+#What this program does: 
 This program handles updating in a modular way
 You specify the web server holding the updates, versions and checksums
 The application should do the rest
 
 
-Instructions:
+#Instructions:
 
 To add this to your program you need to do a few things.
 
@@ -30,7 +27,7 @@ Third: Generate a sha256 checksum of the zip and place it inside a
 Finally: Place all of these inside your ://WebServer/Updater/ProgramName/
 
 
-To execute this from your program: 
+#To execute this from your program: 
 
 Add a process.start for MagiCorpUpdater.exe
 In this start, add the switches based on your programs details
@@ -51,7 +48,7 @@ Python Example: subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0
 -s:http://magicorp.comuv.com/Updater")
 
 
-Known bugs and fixes
+#Known bugs and fixes
 ERROR: Input string was not in a correct format.
 FIXES: Your URL may have a trailing slash in the -s:
 FIXES: The web server is responding in an unusual way
@@ -59,6 +56,6 @@ FIXES: The web server is responding in an unusual way
 ERROR: 
 FIXES:
 
-Contact: 
+#Contact: 
 gmail-jameswalsh5684@gmail.com
 steam-the_magical_one
