@@ -35,14 +35,19 @@ In this start, add the switches based on your programs details
 -s: [Web server holding data]
 
 
-Example: Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
+C# Example: 
 
+'''c#
+Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
+'''
 
 Note! You don't have to use C# to use this program!
 
+Python Example:
 
-Python Example: subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
-
+'''python
+subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
+'''
 
 #Known bugs and fixes
 ERROR: Input string was not in a correct format.
@@ -63,3 +68,4 @@ jameswalsh5684@gmail.com
 
 Steam
 the_magical_one
+
