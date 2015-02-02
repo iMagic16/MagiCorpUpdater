@@ -57,5 +57,7 @@ ERROR:
 FIXES:
 
 #Contact: 
-gmail-jameswalsh5684@gmail.com
-steam-the_magical_one
+Gmail
+jameswalsh5684@gmail.com
+Steam
+the_magical_one
