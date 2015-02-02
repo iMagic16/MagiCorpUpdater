@@ -28,7 +28,7 @@ Add a process.start for MagiCorpUpdater.exe
 
 In this start, add the switches based on your programs details
 
--p: [Name of the program you're updating] (this must match the case and spacing as the web server)
+-p: [Name of the program you're updating] _this must match the case and spacing as the web server_
 
 -v: [Version of the program you're updating]
 
