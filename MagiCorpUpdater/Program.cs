@@ -26,7 +26,7 @@ namespace MagiCorpUpdater
         public static string sha256generated = "", serverURL;
         public static bool fileIntegrity;
         public static bool UrlFromSw = false;
-
+        public static bool Check4Update = false;
         static void Main(string[] args)
         {
             string ProgName = "";
@@ -71,6 +71,13 @@ namespace MagiCorpUpdater
                         Debug.ConOut("S: " + serverURL, false, true); //output trimmed switch input to console
                         UrlFromSw = true;
                     }
+                    //-c: (only check for updates
+                    if (argument.Contains("-c"))
+                    {
+                        Debug.ConOut("Argument found for 'only check for updates'");
+                        Check4Update = true; //set true
+                        Debug.ConOut("C: " + Check4Update, false, true); //output trimmed switch input to console
+                    }
 
                 }
             }
@@ -113,8 +120,15 @@ namespace MagiCorpUpdater
 
             Debug.ConOut("DONE");
             Debug.ConOut("Launching...");
-            Process.Start(ProgName + ".exe");
-            //   Console.ReadKey();
+            try
+            {
+                Process.Start(ProgName + ".exe");
+            }
+            catch (Exception ex)
+            {
+                Debug.ConOut(ex.Message, true);
+            }
+            Console.ReadKey();
         }
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
@@ -159,7 +173,14 @@ namespace MagiCorpUpdater
 
                 if (intNewVersion > intCurrentVersion)
                 {
-                    Debug.ConOut("New version found... Downloading update package...");
+                    Debug.ConOut("New version found... ");
+                    if (Check4Update == true)
+                    {
+                        Debug.ConOut("Only checking for updates, time to exit!");
+                        Console.ReadKey();
+                        Environment.Exit(1);
+                    }
+                    Debug.ConOut("Downloading update package...");
                     Debug.ConOut(UpdateURL + intNewVersion + ".zip");
                     //Download package 
                     try
@@ -183,6 +204,8 @@ namespace MagiCorpUpdater
                     else
                     {
                         Debug.ConOut("DOWNLOAD FAILED!", true);
+                        Console.ReadKey();
+                        Environment.Exit(1);
                     }
                     //CALL EXTR only if sha passed.
                     if (fileIntegrity == true)
@@ -193,11 +216,15 @@ namespace MagiCorpUpdater
                     else
                     {
                         Debug.ConOut("DOWNLOADED FILE DOES NOT MATCH CHECKSUMS", true);
+                        Console.ReadKey();
+                        Environment.Exit(1);
                     }
                 }
                 else
                 {
                     Debug.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!", false, true);
+                    Console.ReadKey();
+                    Environment.Exit(1);
                 }
             }
             catch (Exception e)
