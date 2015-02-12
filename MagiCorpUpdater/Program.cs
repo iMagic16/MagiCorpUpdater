@@ -15,7 +15,8 @@ using System.Security.Cryptography;
 // Check if the program is running before unzip, ask to close or force kill [DONE]
 //Copy out of tmp dir into working dir [DONE]
 //backup old ver [DONE]
-//add server to sw
+//add server to sw [DONE]
+//write logs to file [wip]
 //
 
 namespace MagiCorpUpdater
@@ -25,11 +26,14 @@ namespace MagiCorpUpdater
         public static string sha256generated = "", serverURL;
         public static bool fileIntegrity;
         public static bool UrlFromSw = false;
-        
+
         static void Main(string[] args)
         {
             string ProgName = "";
             string ProgVer = "";
+
+            //Init debug
+            Debug.Init();
 
             //Argument Checker
             if (args == null)
@@ -110,7 +114,7 @@ namespace MagiCorpUpdater
             Debug.ConOut("DONE");
             Debug.ConOut("Launching...");
             Process.Start(ProgName + ".exe");
-            Console.ReadKey();
+            //   Console.ReadKey();
         }
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
@@ -230,6 +234,12 @@ namespace MagiCorpUpdater
                         Debug.ConOut(e.Message);
                     }
                 }
+                else
+                {
+                    Debug.ConOut("Please close the program before continuing...", true);
+                    Console.ReadKey();
+                    Environment.Exit(1);
+                }
             }
             else
             {
@@ -308,8 +318,8 @@ namespace MagiCorpUpdater
         //copy the files from tmp to "live" system
         static void CopyToLive()
         {
-            Debug.ConOut("Copy2Live is heavily WIP", false, true);
-            Thread.Sleep(2000);
+            Debug.ConOut("Copy program to live...", false, true);
+            // Thread.Sleep(2000);
 
             string fileName = "";
 
