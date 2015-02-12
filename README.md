@@ -21,6 +21,7 @@ Third: Generate a sha256 checksum of the zip and place it inside a <version>.sha
 
 Finally: Place all of these inside your ://WebServer/Updater/ProgramName/
 
+https://raw.githubusercontent.com/iMagic16/MagiCorpUpdater/master/layout.jpg
 
 #To execute this from your program: 
 
@@ -37,17 +38,17 @@ In this start, add the switches based on your programs details
 
 C# Example: 
 
-'''c#
+```C#
 Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
-'''
+```
 
 Note! You don't have to use C# to use this program!
 
 Python Example:
 
-'''python
-subprocess.call(""MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
-'''
+```Python
+subprocess.call("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
+```
 
 #Known bugs and fixes
 ERROR: Input string was not in a correct format.
