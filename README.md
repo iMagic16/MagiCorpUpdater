@@ -39,7 +39,7 @@ In this start, add the switches based on your programs details
 C# Example: 
 
 ```C#
-Process.Start("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
+Process.Start("MagiCorpUpdater.exe", "-p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
 ```
 
 Note! You don't have to use C# to use this program!
@@ -47,7 +47,8 @@ Note! You don't have to use C# to use this program!
 Python Example:
 
 ```Python
-subprocess.call("MagiCorpUpdater.exe -p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater")
+import subprocess
+subprocess.call(['MagiCorpUpdater.exe', '-p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater'])
 ```
 
 #Known bugs and fixes
