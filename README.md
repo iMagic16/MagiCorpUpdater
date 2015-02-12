@@ -39,6 +39,7 @@ In this start, add the switches based on your programs details
 C# Example: 
 
 ```C#
+Using System.Diagnostic;
 Process.Start("MagiCorpUpdater.exe", "-p:CiscoOverwatch -v:1.0 -s:http://magicorp.comuv.com/Updater");
 ```
 
