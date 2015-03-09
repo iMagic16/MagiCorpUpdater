@@ -10,11 +10,27 @@ using System.Windows.Forms;
 
 namespace MagicCorpUpdate_Packager
 {
-    public partial class Form1 : Form
+    public partial class FrmMUPackage : Form
     {
-        public Form1()
+        public FrmMUPackage()
         {
             InitializeComponent();
+        }
+
+        private void LblVersion_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            GpPackager.Enabled = true;
+            BtnSubmit.Enabled = true;
         }
     }
 }
