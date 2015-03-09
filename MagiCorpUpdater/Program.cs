@@ -17,7 +17,7 @@ using System.Security.Cryptography;
 //backup old ver [DONE]
 //add server to sw [DONE]
 //write logs to file [wip]
-//
+//09-mar-15
 
 namespace MagiCorpUpdater
 {
