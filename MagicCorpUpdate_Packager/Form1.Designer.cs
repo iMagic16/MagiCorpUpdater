@@ -32,10 +32,10 @@
             this.BtnBrowse = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.GpPackager = new System.Windows.Forms.GroupBox();
-            this.TxtFilesToUpload = new System.Windows.Forms.TextBox();
-            this.LblValid = new System.Windows.Forms.Label();
             this.TxtProgName = new System.Windows.Forms.TextBox();
             this.label2 = new System.Windows.Forms.Label();
+            this.LblValid = new System.Windows.Forms.Label();
+            this.TxtFilesToUpload = new System.Windows.Forms.TextBox();
             this.TxtPasswd = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.TxtUsername = new System.Windows.Forms.TextBox();
@@ -44,8 +44,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.BtnSubmit = new System.Windows.Forms.Button();
             this.GpLogin = new System.Windows.Forms.GroupBox();
+            this.BtnVerifyLogin = new System.Windows.Forms.Button();
             this.LblVersion = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
             this.GpPackager.SuspendLayout();
             this.GpLogin.SuspendLayout();
             this.SuspendLayout();
@@ -58,6 +58,7 @@
             this.BtnBrowse.TabIndex = 7;
             this.BtnBrowse.Text = "Browse";
             this.BtnBrowse.UseVisualStyleBackColor = true;
+            this.BtnBrowse.Click += new System.EventHandler(this.BtnBrowse_Click);
             // 
             // label1
             // 
@@ -84,22 +85,6 @@
             this.GpPackager.TabStop = false;
             this.GpPackager.Text = "Packager";
             // 
-            // TxtFilesToUpload
-            // 
-            this.TxtFilesToUpload.Location = new System.Drawing.Point(88, 45);
-            this.TxtFilesToUpload.Name = "TxtFilesToUpload";
-            this.TxtFilesToUpload.Size = new System.Drawing.Size(313, 20);
-            this.TxtFilesToUpload.TabIndex = 6;
-            // 
-            // LblValid
-            // 
-            this.LblValid.AutoSize = true;
-            this.LblValid.Location = new System.Drawing.Point(489, 49);
-            this.LblValid.Name = "LblValid";
-            this.LblValid.Size = new System.Drawing.Size(63, 13);
-            this.LblValid.TabIndex = 3;
-            this.LblValid.Text = "VAL/INVAL";
-            // 
             // TxtProgName
             // 
             this.TxtProgName.Location = new System.Drawing.Point(88, 19);
@@ -115,6 +100,22 @@
             this.label2.Size = new System.Drawing.Size(80, 13);
             this.label2.TabIndex = 4;
             this.label2.Text = "Program Name:";
+            // 
+            // LblValid
+            // 
+            this.LblValid.AutoSize = true;
+            this.LblValid.Location = new System.Drawing.Point(489, 49);
+            this.LblValid.Name = "LblValid";
+            this.LblValid.Size = new System.Drawing.Size(63, 13);
+            this.LblValid.TabIndex = 3;
+            this.LblValid.Text = "VAL/INVAL";
+            // 
+            // TxtFilesToUpload
+            // 
+            this.TxtFilesToUpload.Location = new System.Drawing.Point(88, 45);
+            this.TxtFilesToUpload.Name = "TxtFilesToUpload";
+            this.TxtFilesToUpload.Size = new System.Drawing.Size(313, 20);
+            this.TxtFilesToUpload.TabIndex = 6;
             // 
             // TxtPasswd
             // 
@@ -174,10 +175,11 @@
             this.BtnSubmit.TabIndex = 8;
             this.BtnSubmit.Text = "Submit";
             this.BtnSubmit.UseVisualStyleBackColor = true;
+            this.BtnSubmit.Click += new System.EventHandler(this.BtnSubmit_Click);
             // 
             // GpLogin
             // 
-            this.GpLogin.Controls.Add(this.button1);
+            this.GpLogin.Controls.Add(this.BtnVerifyLogin);
             this.GpLogin.Controls.Add(this.label5);
             this.GpLogin.Controls.Add(this.TxtHostname);
             this.GpLogin.Controls.Add(this.TxtPasswd);
@@ -191,6 +193,16 @@
             this.GpLogin.TabStop = false;
             this.GpLogin.Text = "Login Credentials";
             // 
+            // BtnVerifyLogin
+            // 
+            this.BtnVerifyLogin.Location = new System.Drawing.Point(88, 105);
+            this.BtnVerifyLogin.Name = "BtnVerifyLogin";
+            this.BtnVerifyLogin.Size = new System.Drawing.Size(313, 22);
+            this.BtnVerifyLogin.TabIndex = 4;
+            this.BtnVerifyLogin.Text = "Verify Login";
+            this.BtnVerifyLogin.UseVisualStyleBackColor = true;
+            this.BtnVerifyLogin.Click += new System.EventHandler(this.BtnVerifyLogin_Click);
+            // 
             // LblVersion
             // 
             this.LblVersion.AutoSize = true;
@@ -200,17 +212,6 @@
             this.LblVersion.Size = new System.Drawing.Size(25, 13);
             this.LblVersion.TabIndex = 14;
             this.LblVersion.Text = "100";
-            this.LblVersion.Click += new System.EventHandler(this.LblVersion_Click);
-            // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(88, 105);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(313, 22);
-            this.button1.TabIndex = 4;
-            this.button1.Text = "Verify Login";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
             // 
             // FrmMUPackage
             // 
@@ -228,7 +229,8 @@
             this.MinimizeBox = false;
             this.Name = "FrmMUPackage";
             this.Text = "MUPackage";
-            this.Load += new System.EventHandler(this.Form1_Load);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmMUPackage_FormClosing);
+            this.Load += new System.EventHandler(this.FrmMUPackage_Load);
             this.GpPackager.ResumeLayout(false);
             this.GpPackager.PerformLayout();
             this.GpLogin.ResumeLayout(false);
@@ -256,7 +258,7 @@
         private System.Windows.Forms.Button BtnSubmit;
         private System.Windows.Forms.GroupBox GpLogin;
         private System.Windows.Forms.Label LblVersion;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button BtnVerifyLogin;
     }
 }
 
