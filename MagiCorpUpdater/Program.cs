@@ -16,8 +16,9 @@ using System.Security.Cryptography;
 //Copy out of tmp dir into working dir [DONE]
 //backup old ver [DONE]
 //add server to sw [DONE]
+//File "magic" must exist for the prog to halt on finish
 //write logs to file [wip]
-//09-mar-15
+//10-mar-15
 
 namespace MagiCorpUpdater
 {
@@ -122,13 +123,17 @@ namespace MagiCorpUpdater
             Debug.ConOut("Launching...");
             try
             {
-                Process.Start(ProgName + ".exe");
+                if (!File.Exists("magic")) 
+                    Process.Start(ProgName + ".exe");
             }
             catch (Exception ex)
             {
                 Debug.ConOut(ex.Message, true);
             }
-            Console.ReadKey();
+
+            if (File.Exists("magic"))
+                Console.ReadKey();
+
         }
 
         static void CheckForUpdates(string ProgramName, string CurrentVersion)
@@ -169,15 +174,16 @@ namespace MagiCorpUpdater
                 double intNewVersion = Convert.ToDouble(NewVersion);
                 double intCurrentVersion = Convert.ToDouble(CurrentVersion);
                 bool DownloadedOK = false;
-                Debug.ConOut(NewVersion + ">" + CurrentVersion);
+                Debug.ConOut(NewVersion + ">" + CurrentVersion + " (new>current)");
 
                 if (intNewVersion > intCurrentVersion)
                 {
-                    Debug.ConOut("New version found... ");
+                    Debug.ConOut("New version found... " + NewVersion);
                     if (Check4Update == true)
                     {
                         Debug.ConOut("Only checking for updates, time to exit!");
-                        Console.ReadKey();
+                        if (File.Exists("magic")) 
+                            Console.ReadKey();
                         Environment.Exit(1);
                     }
                     Debug.ConOut("Downloading update package...");
@@ -185,8 +191,8 @@ namespace MagiCorpUpdater
                     //Download package 
                     try
                     {
-                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".zip", "update.zip");
-                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".sha256", "update.sha256");
+                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".zip", NewVersion + ".zip");
+                        UpdateClient.DownloadFile(UpdateURL + intNewVersion + ".sha256", NewVersion + ".sha256");
                         DownloadedOK = true;
                     }
                     catch (Exception e)
@@ -199,31 +205,35 @@ namespace MagiCorpUpdater
                     {
                         //Compare the MD5 of downloaded with checksum from the server only if it downloaded fine.
                         Debug.ConOut("File downloaded OK, Calling sha256 check");
-                        SHA256Check("update.sha256", "update.zip");
+                        SHA256Check(NewVersion + ".sha256", NewVersion + ".zip", NewVersion);
                     }
                     else
                     {
                         Debug.ConOut("DOWNLOAD FAILED!", true);
-                        Console.ReadKey();
+                        if (File.Exists("magic")) 
+                            Console.ReadKey();
                         Environment.Exit(1);
                     }
                     //CALL EXTR only if sha passed.
                     if (fileIntegrity == true)
                     {
                         Debug.ConOut("SHA256 check passed, Calling zip file extraction");
-                        ExtractPackage("update.zip", ProgramName);
+                        ExtractPackage(NewVersion + ".zip", ProgramName);
                     }
                     else
                     {
                         Debug.ConOut("DOWNLOADED FILE DOES NOT MATCH CHECKSUMS", true);
-                        Console.ReadKey();
+                        if (File.Exists("magic")) 
+                            Console.ReadKey();
                         Environment.Exit(1);
                     }
                 }
                 else
                 {
                     Debug.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!", false, true);
-                    Console.ReadKey();
+                    Debug.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!");
+                    if (File.Exists("magic")) 
+                        Console.ReadKey();
                     Environment.Exit(1);
                 }
             }
@@ -264,7 +274,8 @@ namespace MagiCorpUpdater
                 else
                 {
                     Debug.ConOut("Please close the program before continuing...", true);
-                    Console.ReadKey();
+                    if (File.Exists("magic")) 
+                        Console.ReadKey();
                     Environment.Exit(1);
                 }
             }
@@ -304,7 +315,7 @@ namespace MagiCorpUpdater
 
             //string sourcePath = Directory.GetCurrentDirectory();
 
-            string targetPath = Directory.GetCurrentDirectory() + @"\Backup";
+            string targetPath = Directory.GetCurrentDirectory() + @"\backup";
 
             //Use Path class to manipulate file and directory paths.
             //string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
@@ -316,14 +327,14 @@ namespace MagiCorpUpdater
             //https://msdn.microsoft.com/en-us/library/system.io.path.getfilename(v=vs.110).aspx
             try
             {
-                if (Directory.Exists("Backup"))
+                if (Directory.Exists("backup"))
                 {
                     Debug.ConOut("Backup dir already exists, continuing...");
                 }
                 else
                 {
                     Debug.ConOut("Backup dir not found, creating...");
-                    Directory.CreateDirectory("Backup");
+                    Directory.CreateDirectory("backup");
                 }
 
                 foreach (string s in files)
@@ -380,7 +391,7 @@ namespace MagiCorpUpdater
         }
 
         //check file integrity
-        static void SHA256Check(string sha256, string FileToCheck)
+        static void SHA256Check(string sha256, string FileToCheck, string version)
         {
             Debug.ConOut("SHA256 check in progress...", false, true);
 
@@ -403,7 +414,7 @@ namespace MagiCorpUpdater
             string sha256fromweb = File.ReadAllText(sha256);
 
             Debug.ConOut("Write generated sha256 to a file");
-            File.WriteAllText("update_generated.sha256", sha256generated);
+            File.WriteAllText(version + "_generated.sha256", sha256generated);
 
             Debug.ConOut("Comparing " + sha256generated + " to " + sha256fromweb);
             if (sha256generated == sha256fromweb)
