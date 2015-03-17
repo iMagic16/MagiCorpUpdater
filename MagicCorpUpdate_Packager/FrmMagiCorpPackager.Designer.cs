@@ -46,8 +46,17 @@
             this.GpLogin = new System.Windows.Forms.GroupBox();
             this.BtnVerifyLogin = new System.Windows.Forms.Button();
             this.LblVersion = new System.Windows.Forms.Label();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.TxtVersion = new System.Windows.Forms.TextBox();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.TxtTo256 = new System.Windows.Forms.TextBox();
+            this.BtnFindZip = new System.Windows.Forms.Button();
+            this.label8 = new System.Windows.Forms.Label();
+            this.BtnGensha = new System.Windows.Forms.Button();
             this.GpPackager.SuspendLayout();
             this.GpLogin.SuspendLayout();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // BtnBrowse
@@ -78,7 +87,7 @@
             this.GpPackager.Controls.Add(this.BtnBrowse);
             this.GpPackager.Controls.Add(this.label1);
             this.GpPackager.Enabled = false;
-            this.GpPackager.Location = new System.Drawing.Point(12, 151);
+            this.GpPackager.Location = new System.Drawing.Point(12, 270);
             this.GpPackager.Name = "GpPackager";
             this.GpPackager.Size = new System.Drawing.Size(562, 77);
             this.GpPackager.TabIndex = 2;
@@ -169,7 +178,7 @@
             // BtnSubmit
             // 
             this.BtnSubmit.Enabled = false;
-            this.BtnSubmit.Location = new System.Drawing.Point(12, 234);
+            this.BtnSubmit.Location = new System.Drawing.Point(12, 353);
             this.BtnSubmit.Name = "BtnSubmit";
             this.BtnSubmit.Size = new System.Drawing.Size(562, 54);
             this.BtnSubmit.TabIndex = 8;
@@ -186,6 +195,7 @@
             this.GpLogin.Controls.Add(this.label3);
             this.GpLogin.Controls.Add(this.label4);
             this.GpLogin.Controls.Add(this.TxtUsername);
+            this.GpLogin.Enabled = false;
             this.GpLogin.Location = new System.Drawing.Point(12, 12);
             this.GpLogin.Name = "GpLogin";
             this.GpLogin.Size = new System.Drawing.Size(562, 133);
@@ -207,18 +217,96 @@
             // 
             this.LblVersion.AutoSize = true;
             this.LblVersion.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.LblVersion.Location = new System.Drawing.Point(549, 291);
+            this.LblVersion.Location = new System.Drawing.Point(542, 410);
             this.LblVersion.Name = "LblVersion";
-            this.LblVersion.Size = new System.Drawing.Size(25, 13);
+            this.LblVersion.Size = new System.Drawing.Size(41, 13);
             this.LblVersion.TabIndex = 14;
-            this.LblVersion.Text = "100";
+            this.LblVersion.Text = "version";
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.BtnGensha);
+            this.groupBox1.Controls.Add(this.TxtVersion);
+            this.groupBox1.Controls.Add(this.label6);
+            this.groupBox1.Controls.Add(this.label7);
+            this.groupBox1.Controls.Add(this.TxtTo256);
+            this.groupBox1.Controls.Add(this.BtnFindZip);
+            this.groupBox1.Controls.Add(this.label8);
+            this.groupBox1.Location = new System.Drawing.Point(12, 151);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(562, 113);
+            this.groupBox1.TabIndex = 15;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "General Settings";
+            // 
+            // TxtVersion
+            // 
+            this.TxtVersion.Location = new System.Drawing.Point(88, 19);
+            this.TxtVersion.Name = "TxtVersion";
+            this.TxtVersion.Size = new System.Drawing.Size(313, 20);
+            this.TxtVersion.TabIndex = 5;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 23);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(45, 13);
+            this.label6.TabIndex = 4;
+            this.label6.Text = "Version:";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Location = new System.Drawing.Point(489, 49);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(63, 13);
+            this.label7.TabIndex = 3;
+            this.label7.Text = "VAL/INVAL";
+            // 
+            // TxtTo256
+            // 
+            this.TxtTo256.Location = new System.Drawing.Point(88, 45);
+            this.TxtTo256.Name = "TxtTo256";
+            this.TxtTo256.Size = new System.Drawing.Size(313, 20);
+            this.TxtTo256.TabIndex = 6;
+            // 
+            // BtnFindZip
+            // 
+            this.BtnFindZip.Location = new System.Drawing.Point(407, 45);
+            this.BtnFindZip.Name = "BtnFindZip";
+            this.BtnFindZip.Size = new System.Drawing.Size(75, 20);
+            this.BtnFindZip.TabIndex = 7;
+            this.BtnFindZip.Text = "Browse";
+            this.BtnFindZip.UseVisualStyleBackColor = true;
+            this.BtnFindZip.Click += new System.EventHandler(this.BtnFindZip_Click);
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Location = new System.Drawing.Point(6, 49);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(72, 13);
+            this.label8.TabIndex = 1;
+            this.label8.Text = "ZIP filename: ";
+            // 
+            // BtnGensha
+            // 
+            this.BtnGensha.Location = new System.Drawing.Point(88, 71);
+            this.BtnGensha.Name = "BtnGensha";
+            this.BtnGensha.Size = new System.Drawing.Size(313, 22);
+            this.BtnGensha.TabIndex = 8;
+            this.BtnGensha.Text = "Generate sha256";
+            this.BtnGensha.UseVisualStyleBackColor = true;
+            this.BtnGensha.Click += new System.EventHandler(this.BtnGensha_Click);
             // 
             // FrmMUPackage
             // 
             this.AcceptButton = this.BtnSubmit;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(586, 309);
+            this.ClientSize = new System.Drawing.Size(586, 432);
+            this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.LblVersion);
             this.Controls.Add(this.GpLogin);
             this.Controls.Add(this.BtnSubmit);
@@ -235,6 +323,8 @@
             this.GpPackager.PerformLayout();
             this.GpLogin.ResumeLayout(false);
             this.GpLogin.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -259,6 +349,14 @@
         private System.Windows.Forms.GroupBox GpLogin;
         private System.Windows.Forms.Label LblVersion;
         private System.Windows.Forms.Button BtnVerifyLogin;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Button BtnGensha;
+        private System.Windows.Forms.TextBox TxtVersion;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.TextBox TxtTo256;
+        private System.Windows.Forms.Button BtnFindZip;
+        private System.Windows.Forms.Label label8;
     }
 }
 
