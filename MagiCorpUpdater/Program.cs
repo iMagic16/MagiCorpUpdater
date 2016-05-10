@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Net;
-using System.Threading.Tasks;
 using System.IO;
 using System.IO.Compression;
 using System.Diagnostics;
 using System.Threading;
 using System.Security.Cryptography;
+using MagiCorpDevTools_Debugger;
 
 //                  TO DO
 // MD5 check / file downloaded integrity check [DONE]
@@ -32,58 +29,61 @@ namespace MagiCorpUpdater
         {
             string ProgName = "";
             string ProgVer = "";
-
+            if (!(File.Exists("MagiCorpDevTools_Debugger.dll")))
+            {
+                File.WriteAllBytes("MagiCorpDevTools_Debugger.dll", Properties.Resources.MagiCorpDevTools_Debugger);
+            }
             //Init debug
-            Debug.Init();
+            M_Debugger.Init();
 
             //Argument Checker
             if (args == null)
             {
-                Debug.ConOut("No Arguments taken"); // no args? gg
+                M_Debugger.ConOut("No Arguments taken"); // no args? gg
             }
             else
             {
-                Debug.ConOut(args.Length + " Arguments Found");
+                M_Debugger.ConOut(args.Length + " Arguments Found");
 
                 for (int i = 0; i < args.Length; i++) // Loop through array
                 {
                     string argument = args[i];
-                    Debug.ConOut("Argument " + i + " is [" + argument + "]");
+                    M_Debugger.ConOut("Argument " + i + " is [" + argument + "]");
 
                     //-p: (program name) via switch
                     if (argument.Contains("-p:"))
                     {
-                        Debug.ConOut("Argument found for Program Name: " + argument);
+                        M_Debugger.ConOut("Argument found for Program Name: " + argument);
                         ProgName = argument.Trim(new char[] { '-', 'p', ':' });//cut the -p: from the switch
-                        Debug.ConOut("P: " + ProgName, false, true); //output trimmed switch input to console
+                        M_Debugger.ConOut("P: " + ProgName, false, true); //output trimmed switch input to console
                     }
                     //-v: (program veresion) via switch
                     if (argument.Contains("-v:"))
                     {
-                        Debug.ConOut("Argument found for Program Version: " + argument);
+                        M_Debugger.ConOut("Argument found for Program Version: " + argument);
                         ProgVer = argument.Trim(new char[] { '-', 'v', ':' }); //cut the -v: from the switch
-                        Debug.ConOut("V: " + ProgVer, false, true); //output trimmed switch input to console
+                        M_Debugger.ConOut("V: " + ProgVer, false, true); //output trimmed switch input to console
                     }
                     //-s: (server url) via switch
                     if (argument.Contains("-s:"))
                     {
-                        Debug.ConOut("Argument found for Server: " + argument);
+                        M_Debugger.ConOut("Argument found for Server: " + argument);
                         serverURL = argument.Trim(new char[] { '-', 's', ':' }); //cut the -s: from the switch
-                        Debug.ConOut("S: " + serverURL, false, true); //output trimmed switch input to console
+                        M_Debugger.ConOut("S: " + serverURL, false, true); //output trimmed switch input to console
                         UrlFromSw = true;
                     }
                     //-c: (only check for updates
                     if (argument.Contains("-c"))
                     {
-                        Debug.ConOut("Argument found for 'only check for updates'");
+                        M_Debugger.ConOut("Argument found for 'only check for updates'");
                         Check4Update = true; //set true
-                        Debug.ConOut("C: " + Check4Update, false, true); //output trimmed switch input to console
+                        M_Debugger.ConOut("C: " + Check4Update, false, true); //output trimmed switch input to console
                     }
 
                 }
             }
 
-            Debug.ConOut("PROGRAM START_");
+            M_Debugger.ConOut("PROGRAM START_");
 
             //Checking if we have had args set our names and versions
             if (ProgName.Length > 1)
@@ -92,7 +92,7 @@ namespace MagiCorpUpdater
             }
             else
             {
-                Debug.ConOut("Program to update?");
+                M_Debugger.ConOut("Program to update?");
                 ProgName = Console.ReadLine();
             }
             if (ProgVer.Length > 1)
@@ -104,23 +104,27 @@ namespace MagiCorpUpdater
                 try
                 {
                     //Try to read version from version file
-                    ProgVer = System.IO.File.ReadAllText("version.mup");
+                    ProgVer = File.ReadAllText("version.mup");
                 }
                 catch (Exception e)
                 {
-                    Debug.ConOut(e.Message, true);
+                    M_Debugger.ConOut(e.Message, true);
 
                     //Try manually..
-                    Debug.ConOut("Version?");
-                    ProgVer = Console.ReadLine();
+                    if(ProgVer == "")
+                    {
+                        M_Debugger.ConOut("Version?");
+                        ProgVer = Console.ReadLine();
+                    }
+                    
                 }
             }
 
             //Call subroutine to check for updates
             CheckForUpdates(ProgName, ProgVer);
 
-            Debug.ConOut("DONE");
-            Debug.ConOut("Launching...");
+            M_Debugger.ConOut("DONE");
+            M_Debugger.ConOut("Launching...");
             try
             {
                 if (!File.Exists("magic")) 
@@ -128,7 +132,7 @@ namespace MagiCorpUpdater
             }
             catch (Exception ex)
             {
-                Debug.ConOut(ex.Message, true);
+                M_Debugger.ConOut(ex.Message, true);
             }
 
             if (File.Exists("magic"))
@@ -146,17 +150,17 @@ namespace MagiCorpUpdater
             }
             else
             {
-                UpdateURL = "http://magicorp.comuv.com/Updater/" + ProgramName + @"/";
+                UpdateURL = "http://magicorp.me/Updater" + ProgramName + @"/";
             }
 
             string FileToCheck = "version.mup";
             string NewVersion = "null";
             //create new net web interf
             WebClient UpdateClient = new WebClient();
-            Debug.ConOut("Web Client Created");
+            M_Debugger.ConOut("Web Client Created");
             //res to dl
-            Debug.ConOut("Downloading version check...");
-            Debug.ConOut(UpdateURL + FileToCheck);
+            M_Debugger.ConOut("Downloading version check...");
+            M_Debugger.ConOut(UpdateURL + FileToCheck);
             //check for the update
             try
             {
@@ -164,30 +168,30 @@ namespace MagiCorpUpdater
             }
             catch (Exception e)
             {
-                Debug.ConOut(e.Message, true);
+                M_Debugger.ConOut(e.Message, true);
             }
 
             //Compare
-            Debug.ConOut("Checking versions...");
+            M_Debugger.ConOut("Checking versions...");
             try
             {
                 double intNewVersion = Convert.ToDouble(NewVersion);
                 double intCurrentVersion = Convert.ToDouble(CurrentVersion);
                 bool DownloadedOK = false;
-                Debug.ConOut(NewVersion + ">" + CurrentVersion + " (new>current)");
+                M_Debugger.ConOut(NewVersion + ">" + CurrentVersion + " (new>current)");
 
                 if (intNewVersion > intCurrentVersion)
                 {
-                    Debug.ConOut("New version found... " + NewVersion);
+                    M_Debugger.ConOut("New version found... " + NewVersion);
                     if (Check4Update == true)
                     {
-                        Debug.ConOut("Only checking for updates, time to exit!");
+                        M_Debugger.ConOut("Only checking for updates, time to exit!");
                         if (File.Exists("magic")) 
                             Console.ReadKey();
                         Environment.Exit(1);
                     }
-                    Debug.ConOut("Downloading update package...");
-                    Debug.ConOut(UpdateURL + intNewVersion + ".zip");
+                    M_Debugger.ConOut("Downloading update package...");
+                    M_Debugger.ConOut(UpdateURL + intNewVersion + ".zip");
                     //Download package 
                     try
                     {
@@ -197,19 +201,19 @@ namespace MagiCorpUpdater
                     }
                     catch (Exception e)
                     {
-                        Debug.ConOut(e.Message, true);
+                        M_Debugger.ConOut(e.Message, true);
                         // throw;
                     }
 
                     if (DownloadedOK == true)
                     {
                         //Compare the MD5 of downloaded with checksum from the server only if it downloaded fine.
-                        Debug.ConOut("File downloaded OK, Calling sha256 check");
+                        M_Debugger.ConOut("File downloaded OK, Calling sha256 check");
                         SHA256Check(NewVersion + ".sha256", NewVersion + ".zip", NewVersion);
                     }
                     else
                     {
-                        Debug.ConOut("DOWNLOAD FAILED!", true);
+                        M_Debugger.ConOut("DOWNLOAD FAILED!", true);
                         if (File.Exists("magic")) 
                             Console.ReadKey();
                         Environment.Exit(1);
@@ -217,12 +221,12 @@ namespace MagiCorpUpdater
                     //CALL EXTR only if sha passed.
                     if (fileIntegrity == true)
                     {
-                        Debug.ConOut("SHA256 check passed, Calling zip file extraction");
+                        M_Debugger.ConOut("SHA256 check passed, Calling zip file extraction");
                         ExtractPackage(NewVersion + ".zip", ProgramName);
                     }
                     else
                     {
-                        Debug.ConOut("DOWNLOADED FILE DOES NOT MATCH CHECKSUMS", true);
+                        M_Debugger.ConOut("DOWNLOADED FILE DOES NOT MATCH CHECKSUMS", true);
                         if (File.Exists("magic")) 
                             Console.ReadKey();
                         Environment.Exit(1);
@@ -230,8 +234,8 @@ namespace MagiCorpUpdater
                 }
                 else
                 {
-                    Debug.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!", false, true);
-                    Debug.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!");
+                    M_Debugger.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!", false, true);
+                    M_Debugger.ConOut("No new version found, you have the latest! (" + CurrentVersion + ")!");
                     if (File.Exists("magic")) 
                         Console.ReadKey();
                     Environment.Exit(1);
@@ -239,7 +243,7 @@ namespace MagiCorpUpdater
             }
             catch (Exception e)
             {
-                Debug.ConOut(e.Message, true);
+                M_Debugger.ConOut(e.Message, true);
             }
         }
 
@@ -250,8 +254,8 @@ namespace MagiCorpUpdater
             //Check if program is running first...
             if (Process.GetProcessesByName(ProgramName).Length > 0)
             {
-                Debug.ConOut(ProgramName + ".exe is running, please close before updating");
-                Debug.ConOut("Close program, or type y for a force closure");
+                M_Debugger.ConOut(ProgramName + ".exe is running, please close before updating");
+                M_Debugger.ConOut("Close program, or type y for a force closure");
                 string input = Console.ReadLine();
 
                 if (input == "y")
@@ -262,18 +266,18 @@ namespace MagiCorpUpdater
                         foreach (Process proc in Process.GetProcessesByName(ProgramName))
                         {
                             proc.Kill();
-                            Debug.ConOut("Waiting for program to close...");
+                            M_Debugger.ConOut("Waiting for program to close...");
                             Thread.Sleep(2000);
                         }
                     }
                     catch (Exception e)
                     {
-                        Debug.ConOut(e.Message);
+                        M_Debugger.ConOut(e.Message);
                     }
                 }
                 else
                 {
-                    Debug.ConOut("Please close the program before continuing...", true);
+                    M_Debugger.ConOut("Please close the program before continuing...", true);
                     if (File.Exists("magic")) 
                         Console.ReadKey();
                     Environment.Exit(1);
@@ -281,23 +285,23 @@ namespace MagiCorpUpdater
             }
             else
             {
-                Debug.ConOut("Program not running, clear for go ahead.");
+                M_Debugger.ConOut("Program not running, clear for go ahead.");
             }
 
             //clear old data
-            Debug.ConOut("Clearing old data...");
+            M_Debugger.ConOut("Clearing old data...");
             if (Directory.Exists("tmp"))
             {
-                Debug.ConOut("tmp dir found, deleting", true);
+                M_Debugger.ConOut("tmp dir found, deleting", true);
                 Directory.Delete("tmp", true);
             }
             else
             {
-                Debug.ConOut("No leftovers found.");
+                M_Debugger.ConOut("No leftovers found.");
             }
 
             //EXTRACT TIME!
-            Debug.ConOut("Extracting package: " + PackageName);
+            M_Debugger.ConOut("Extracting package: " + PackageName);
             ZipFile.ExtractToDirectory(PackageName, Directory.GetCurrentDirectory() + @"\tmp");
 
             //Backup time...
@@ -310,7 +314,7 @@ namespace MagiCorpUpdater
         //backup existing live program
         static void BackupExistingProgram()
         {
-            Debug.ConOut("Backing up existing program...", false, true);
+            M_Debugger.ConOut("Backing up existing program...", false, true);
             string fileName = "";
 
             //string sourcePath = Directory.GetCurrentDirectory();
@@ -320,7 +324,7 @@ namespace MagiCorpUpdater
             //Use Path class to manipulate file and directory paths.
             //string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
 
-            string destFile = System.IO.Path.Combine(targetPath, fileName);
+            string destFile = Path.Combine(targetPath, fileName);
 
             string[] files = Directory.GetFiles(Directory.GetCurrentDirectory());
 
@@ -329,11 +333,11 @@ namespace MagiCorpUpdater
             {
                 if (Directory.Exists("backup"))
                 {
-                    Debug.ConOut("Backup dir already exists, continuing...");
+                    M_Debugger.ConOut("Backup dir already exists, continuing...");
                 }
                 else
                 {
-                    Debug.ConOut("Backup dir not found, creating...");
+                    M_Debugger.ConOut("Backup dir not found, creating...");
                     Directory.CreateDirectory("backup");
                 }
 
@@ -341,13 +345,13 @@ namespace MagiCorpUpdater
                 {
                     fileName = Path.GetFileName(s);
                     destFile = Path.Combine(targetPath, fileName);
-                    System.IO.File.Copy(s, destFile, true);
-                    Debug.ConOut("B: Moved " + s + " to " + targetPath, false, false, true);
+                    File.Copy(s, destFile, true);
+                    M_Debugger.ConOut("B: Moved " + s + " to " + targetPath, false, false, true);
                 }
             }
             catch (Exception e)
             {
-                Debug.ConOut(e.Message, true);
+                M_Debugger.ConOut(e.Message, true);
                 throw;
             }
 
@@ -356,7 +360,7 @@ namespace MagiCorpUpdater
         //copy the files from tmp to "live" system
         static void CopyToLive()
         {
-            Debug.ConOut("Copy program to live...", false, true);
+            M_Debugger.ConOut("Copy program to live...", false, true);
             // Thread.Sleep(2000);
 
             string fileName = "";
@@ -367,7 +371,7 @@ namespace MagiCorpUpdater
             //Use Path class to manipulate file and directory paths.
             //string sourceFile = System.IO.Path.Combine(sourcePath, fileName);
 
-            string destFile = System.IO.Path.Combine(targetPath, fileName);
+            string destFile = Path.Combine(targetPath, fileName);
 
             string[] files = Directory.GetFiles(sourcePath);
 
@@ -379,13 +383,13 @@ namespace MagiCorpUpdater
                 {
                     fileName = Path.GetFileName(s);
                     destFile = Path.Combine(targetPath, fileName);
-                    System.IO.File.Copy(s, destFile, true);
-                    Debug.ConOut("C2L: Moved " + s + " to " + targetPath, false, false, true);
+                    File.Copy(s, destFile, true);
+                    M_Debugger.ConOut("C2L: Moved " + s + " to " + targetPath, false, false, true);
                 }
             }
             catch (Exception e)
             {
-                Debug.ConOut(e.Message, true);
+                M_Debugger.ConOut(e.Message, true);
             }
 
         }
@@ -393,38 +397,38 @@ namespace MagiCorpUpdater
         //check file integrity
         static void SHA256Check(string sha256, string FileToCheck, string version)
         {
-            Debug.ConOut("SHA256 check in progress...", false, true);
+            M_Debugger.ConOut("SHA256 check in progress...", false, true);
 
-            Debug.ConOut("Opening file to generate sha256...");
+            M_Debugger.ConOut("Opening file to generate sha256...");
             FileStream fs = File.Open(FileToCheck, FileMode.Open, FileAccess.Read, FileShare.None);
 
-            Debug.ConOut("Create sha256 instance");
+            M_Debugger.ConOut("Create sha256 instance");
             SHA256 sha256r = SHA256Managed.Create();
 
-            Debug.ConOut("Create hash from file...");
+            M_Debugger.ConOut("Create hash from file...");
             byte[] hashvalue = sha256r.ComputeHash(fs);
 
-            Debug.ConOut("Closing file");
+            M_Debugger.ConOut("Closing file");
             fs.Close();
 
-            Debug.ConOut("Convert byte array into a string");
+            M_Debugger.ConOut("Convert byte array into a string");
             PrintByteArray(hashvalue);
 
-            Debug.ConOut("Read sha256 from the server");
+            M_Debugger.ConOut("Read sha256 from the server");
             string sha256fromweb = File.ReadAllText(sha256);
 
-            Debug.ConOut("Write generated sha256 to a file");
+            M_Debugger.ConOut("Write generated sha256 to a file");
             File.WriteAllText(version + "_generated.sha256", sha256generated);
 
-            Debug.ConOut("Comparing " + sha256generated + " to " + sha256fromweb);
+            M_Debugger.ConOut("Comparing " + sha256generated + " to " + sha256fromweb);
             if (sha256generated == sha256fromweb)
             {
-                Debug.ConOut("File integrity: OK", false, false, true);
+                M_Debugger.ConOut("File integrity: OK", false, false, true);
                 fileIntegrity = true;
             }
             else
             {
-                Debug.ConOut("File integrity: BAD", true);
+                M_Debugger.ConOut("File integrity: BAD", true);
                 fileIntegrity = false;
             }
 
@@ -438,10 +442,10 @@ namespace MagiCorpUpdater
             {
                 //Console.Write(String.Format("{0:X2}", array[i]));
                 sha256generated += String.Format("{0:X2}", array[i]);
-                Debug.ConOut(sha256generated, false, false, true);
+                M_Debugger.ConOut(sha256generated, false, false, true);
                 if ((i % 4) == 3)
                 {
-                    Debug.ConOut(" ", false, false, true);
+                    M_Debugger.ConOut(" ", false, false, true);
                     sha256generated += " ";
                 }
             }

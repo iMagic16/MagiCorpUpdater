@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace MagicCorpUpdate_Packager.Properties {
+namespace MagiCorpUpdater.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace MagicCorpUpdate_Packager.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MagicCorpUpdate_Packager.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("MagiCorpUpdater.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -63,19 +63,9 @@ namespace MagicCorpUpdate_Packager.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Byte[].
         /// </summary>
-        internal static byte[] WinSCP {
+        internal static byte[] MagiCorpDevTools_Debugger {
             get {
-                object obj = ResourceManager.GetObject("WinSCP", resourceCulture);
-                return ((byte[])(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Byte[].
-        /// </summary>
-        internal static byte[] WinSCPnet {
-            get {
-                object obj = ResourceManager.GetObject("WinSCPnet", resourceCulture);
+                object obj = ResourceManager.GetObject("MagiCorpDevTools_Debugger", resourceCulture);
                 return ((byte[])(obj));
             }
         }

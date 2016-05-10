@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-public class Debug
+public class MagiCorpDevTools_Debugger
 {
     /// <summary>
     /// Loads the debug shit, creates log files etc etc 
@@ -21,7 +21,7 @@ public class Debug
                 Directory.CreateDirectory(path);
             }
 
-            if (File.Exists(path + "debug_normal.log"))
+            if (File.Exists(path + "debug.log"))
             {
                 foreach (FileInfo f in new DirectoryInfo(path).GetFiles("debug*.log"))
                 {
@@ -35,7 +35,7 @@ public class Debug
                 File.Create(path + "debug_normal.log").Close();
                 File.Create(path + "debug_error.log").Close();
                 File.Create(path + "debug_special.log").Close();
-
+                File.Create(path + "debug.log").Close();
             }
         }
         catch (Exception ex)
@@ -59,7 +59,7 @@ public class Debug
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(Message);
 
-            WriteToFile(Message, "error");
+            LogToFile(Message, "error");
         }
         else if (SPC)
         {
@@ -68,7 +68,7 @@ public class Debug
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(Message);
 
-            WriteToFile(Message, "special");
+            LogToFile(Message, "special");
         }
         else if (SPC2)
         {
@@ -78,7 +78,7 @@ public class Debug
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine(Message);
 
-            WriteToFile(Message, "special");
+            LogToFile(Message, "special");
         }
         else
         {
@@ -87,25 +87,39 @@ public class Debug
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine(Message);
 
-            WriteToFile(Message, "normal");
+            LogToFile(Message, "normal");
         }
     }
 
-    private static void WriteToFile(string toWrite, string type)
+    private static void LogToFile(string toWrite, string type)
     {
         try
         {
+            string FilePath = Path.Combine(Directory.GetCurrentDirectory() + "\\logs\\");
 
-            string pathtowrite = Path.Combine(Directory.GetCurrentDirectory() + "\\logs\\");
-            System.IO.StreamReader ReadMe = new System.IO.StreamReader(pathtowrite + "debug_" + type + ".log");
-            string toWriteAppended = ReadMe.ReadToEnd();
+            StreamReader FileToRead_All = new StreamReader(FilePath + "debug.log"); //this writes to a single file
+
+            StreamReader FileToRead = new StreamReader(FilePath + "debug_" + type + ".log");//this writes to type-based log file
+
+            string toWriteAppended = FileToRead.ReadToEnd();
             toWriteAppended += toWrite + Environment.NewLine;
-            ReadMe.Close();
+
+            string toWriteAppended_All = FileToRead_All.ReadToEnd();
+            toWriteAppended_All += toWrite + Environment.NewLine;
+
+            FileToRead.Close();
+            FileToRead_All.Close();
 
 
-            System.IO.StreamWriter WriteMe = new System.IO.StreamWriter(pathtowrite + "debug_" + type + ".log");
-            WriteMe.Write(toWriteAppended);
-            WriteMe.Close();
+            StreamWriter FileToWrite_All = new StreamWriter(FilePath + "debug.log");
+
+            StreamWriter FileToWrite = new StreamWriter(FilePath + "debug_" + type + ".log");
+            FileToWrite.Write(toWriteAppended);
+            FileToWrite_All.Write(toWriteAppended_All);
+
+            FileToWrite.Close();
+            FileToWrite_All.Close();
+
         }
         catch (Exception ex)
         {
@@ -113,4 +127,5 @@ public class Debug
         }
 
     }
+
 }

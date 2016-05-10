@@ -1,13 +1,12 @@
 ﻿using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Resources;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("MUP")]
-[assembly: AssemblyDescription("Modular update program")]
+[assembly: AssemblyTitle("MagiCorp Update Program")]
+[assembly: AssemblyDescription("MagiCorp Update Program")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("MagiCorp")]
 [assembly: AssemblyProduct("MagiCorp Updater")]
